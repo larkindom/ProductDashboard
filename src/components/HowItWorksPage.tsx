@@ -16,9 +16,9 @@ const sections: Section[] = [
   {
     title: "Active projects",
     body:
-      "Every in-flight initiative with its status (on track, at risk, blocked, or " +
-      "done), owner, progress, and target date, so a reviewer can see what's " +
-      "moving and what needs attention without a status meeting.",
+      "A kanban board of every initiative by release stage — upcoming, in " +
+      "progress, testing, beta release, GA release — with a health badge on " +
+      "any card that's at risk or blocked, plus owner, progress, and target date.",
   },
   {
     title: "Open action items",
@@ -28,10 +28,15 @@ const sections: Section[] = [
   },
 ];
 
-const legend = [
-  { label: "On track / Done", color: "var(--status-good)" },
-  { label: "At risk / Medium priority", color: "var(--status-warning)" },
-  { label: "Blocked / High priority", color: "var(--status-critical)" },
+const healthLegend = [
+  { label: "At risk", color: "var(--status-warning)" },
+  { label: "Blocked", color: "var(--status-critical)" },
+];
+
+const actionItemLegend = [
+  { label: "Done", color: "var(--status-good)" },
+  { label: "Medium priority", color: "var(--status-warning)" },
+  { label: "High priority", color: "var(--status-critical)" },
 ];
 
 function Card({ children }: { children: React.ReactNode }) {
@@ -79,23 +84,46 @@ export function HowItWorksPage() {
         <IntegrationFlowChart />
       </div>
 
-      <Card>
-        <h3 className="mb-2 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-          Status colors
-        </h3>
-        <ul className="flex flex-col gap-1.5 text-sm">
-          {legend.map((item) => (
-            <li key={item.label} className="flex items-center gap-2" style={{ color: "var(--text-secondary)" }}>
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-full"
-                style={{ background: item.color }}
-                aria-hidden="true"
-              />
-              {item.label}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Card>
+          <h3 className="mb-2 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+            Project health badges
+          </h3>
+          <ul className="flex flex-col gap-1.5 text-sm">
+            {healthLegend.map((item) => (
+              <li key={item.label} className="flex items-center gap-2" style={{ color: "var(--text-secondary)" }}>
+                <span
+                  className="inline-block h-2.5 w-2.5 rounded-full"
+                  style={{ background: item.color }}
+                  aria-hidden="true"
+                />
+                {item.label}
+              </li>
+            ))}
+            <li className="text-xs" style={{ color: "var(--text-muted)" }}>
+              On-track projects show no badge.
             </li>
-          ))}
-        </ul>
-      </Card>
+          </ul>
+        </Card>
+
+        <Card>
+          <h3 className="mb-2 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+            Action item colors
+          </h3>
+          <ul className="flex flex-col gap-1.5 text-sm">
+            {actionItemLegend.map((item) => (
+              <li key={item.label} className="flex items-center gap-2" style={{ color: "var(--text-secondary)" }}>
+                <span
+                  className="inline-block h-2.5 w-2.5 rounded-full"
+                  style={{ background: item.color }}
+                  aria-hidden="true"
+                />
+                {item.label}
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
 
       <p className="mt-6 text-xs" style={{ color: "var(--text-muted)" }}>
         This is a proof of concept — all data currently comes from{" "}

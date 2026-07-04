@@ -27,13 +27,15 @@ export interface ChurnPoint {
   churnRate: number;
 }
 
-export type ProjectStatus = "on-track" | "at-risk" | "blocked" | "done";
+export type ProjectStage = "upcoming" | "in-progress" | "testing" | "beta" | "ga";
+export type ProjectHealth = "on-track" | "at-risk" | "blocked";
 
 export interface Project {
   id: string;
   name: string;
   owner: string;
-  status: ProjectStatus;
+  stage: ProjectStage;
+  health: ProjectHealth;
   progress: number; // 0-100
   targetDate: string;
   summary: string;
@@ -123,7 +125,8 @@ export const projects: Project[] = [
     id: "proj-1",
     name: "Self-serve onboarding revamp",
     owner: "M. Alvarez",
-    status: "on-track",
+    stage: "beta",
+    health: "on-track",
     progress: 72,
     targetDate: "2026-08-15",
     summary: "New activation flow live in beta; rollout to 100% next sprint.",
@@ -132,7 +135,8 @@ export const projects: Project[] = [
     id: "proj-2",
     name: "Usage-based billing",
     owner: "J. Chen",
-    status: "at-risk",
+    stage: "in-progress",
+    health: "at-risk",
     progress: 45,
     targetDate: "2026-08-01",
     summary: "Metering pipeline slipped a week; invoicing UI still on track.",
@@ -141,7 +145,8 @@ export const projects: Project[] = [
     id: "proj-3",
     name: "SOC 2 Type II audit",
     owner: "R. Osei",
-    status: "on-track",
+    stage: "testing",
+    health: "on-track",
     progress: 88,
     targetDate: "2026-07-25",
     summary: "Evidence collection complete; awaiting auditor sign-off.",
@@ -150,7 +155,8 @@ export const projects: Project[] = [
     id: "proj-4",
     name: "Mobile app (iOS) beta",
     owner: "S. Kapoor",
-    status: "blocked",
+    stage: "beta",
+    health: "blocked",
     progress: 30,
     targetDate: "2026-09-01",
     summary: "Blocked on App Store review guideline clarification.",
@@ -159,10 +165,21 @@ export const projects: Project[] = [
     id: "proj-5",
     name: "Q2 pricing page redesign",
     owner: "M. Alvarez",
-    status: "done",
+    stage: "ga",
+    health: "on-track",
     progress: 100,
     targetDate: "2026-06-20",
     summary: "Shipped; conversion up 11% since launch.",
+  },
+  {
+    id: "proj-6",
+    name: "AI copilot for reporting",
+    owner: "T. Nguyen",
+    stage: "upcoming",
+    health: "on-track",
+    progress: 5,
+    targetDate: "2026-10-01",
+    summary: "Scoping complete; kickoff planned for next sprint.",
   },
 ];
 

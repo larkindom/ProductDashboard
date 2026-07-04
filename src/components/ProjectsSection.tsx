@@ -1,12 +1,37 @@
-import type { Project, ProjectStatus } from "../data/mockData";
+import type { Project, ProjectHealth, ProjectStage } from "../data/mockData";
 import { projects } from "../data/mockData";
 
-const columns: { status: ProjectStatus; label: string; color: string }[] = [
-  { status: "on-track", label: "On track", color: "var(--status-good)" },
-  { status: "at-risk", label: "At risk", color: "var(--status-warning)" },
-  { status: "blocked", label: "Blocked", color: "var(--status-critical)" },
-  { status: "done", label: "Done", color: "var(--text-muted)" },
+const columns: { stage: ProjectStage; label: string }[] = [
+  { stage: "upcoming", label: "Upcoming" },
+  { stage: "in-progress", label: "In progress" },
+  { stage: "testing", label: "Testing" },
+  { stage: "beta", label: "Beta release" },
+  { stage: "ga", label: "GA release" },
 ];
+
+const healthConfig: Record<ProjectHealth, { label: string; color: string } | null> = {
+  "on-track": null,
+  "at-risk": { label: "At risk", color: "var(--status-warning)" },
+  blocked: { label: "Blocked", color: "var(--status-critical)" },
+};
+
+function HealthBadge({ health }: { health: ProjectHealth }) {
+  const cfg = healthConfig[health];
+  if (!cfg) return null;
+  return (
+    <span
+      className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium"
+      style={{ borderColor: "var(--border-hairline)", color: "var(--text-primary)" }}
+    >
+      <span
+        className="inline-block h-1.5 w-1.5 rounded-full"
+        style={{ background: cfg.color }}
+        aria-hidden="true"
+      />
+      {cfg.label}
+    </span>
+  );
+}
 
 function ProjectCard({ project }: { project: Project }) {
   return (
@@ -14,9 +39,12 @@ function ProjectCard({ project }: { project: Project }) {
       className="rounded-md border p-3"
       style={{ borderColor: "var(--border-hairline)", background: "var(--surface-1)" }}
     >
-      <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
-        {project.name}
-      </p>
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+          {project.name}
+        </p>
+        <HealthBadge health={project.health} />
+      </div>
       <p className="mt-1 text-xs" style={{ color: "var(--text-secondary)" }}>
         {project.summary}
       </p>
@@ -37,7 +65,7 @@ function ProjectCard({ project }: { project: Project }) {
       </div>
 
       <div
-        className="mt-2.5 flex items-center justify-between text-xs"
+        className="mt-2.5 flex flex-col gap-0.5 text-xs"
         style={{ color: "var(--text-muted)" }}
       >
         <span>{project.owner}</span>
@@ -53,21 +81,16 @@ export function ProjectsSection() {
       <h2 className="mb-3 text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
         Active projects
       </h2>
-      <div className="grid grid-cols-1 gap-4 overflow-x-auto sm:grid-cols-2 lg:grid-cols-4">
+      <div className="flex gap-3 overflow-x-auto pb-1">
         {columns.map((column) => {
-          const items = projects.filter((p) => p.status === column.status);
+          const items = projects.filter((p) => p.stage === column.stage);
           return (
             <div
-              key={column.status}
-              className="rounded-lg border p-3"
+              key={column.stage}
+              className="w-56 shrink-0 rounded-lg border p-3"
               style={{ borderColor: "var(--border-hairline)", background: "var(--surface-page)" }}
             >
               <div className="mb-3 flex items-center gap-2 px-1">
-                <span
-                  className="inline-block h-2.5 w-2.5 rounded-full"
-                  style={{ background: column.color }}
-                  aria-hidden="true"
-                />
                 <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
                   {column.label}
                 </h3>
