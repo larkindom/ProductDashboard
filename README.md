@@ -27,3 +27,10 @@ npm install
 npm run dev      # start local dev server
 npm run build     # type-check and build for production
 ```
+
+## Static preview
+
+`preview.html` is a self-contained snapshot of the production build (CSS and JS
+inlined) — open it directly in a browser, no dev server or build step required.
+It's a point-in-time export for quick sharing; regenerate it after UI changes by
+running `npm run build` and re-inlining `dist/assets/*` into the file.
