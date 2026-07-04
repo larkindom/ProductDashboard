@@ -1,3 +1,5 @@
+import { IntegrationFlowChart } from "./IntegrationFlowChart";
+
 interface Section {
   title: string;
   body: string;
@@ -45,7 +47,7 @@ function Card({ children }: { children: React.ReactNode }) {
 
 export function HowItWorksPage() {
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-3xl">
       <p className="mb-6 text-sm" style={{ color: "var(--text-secondary)" }}>
         This dashboard exists to give stakeholders a fast, self-serve status
         update — metrics, project health, and open to-dos in one place, instead
@@ -63,6 +65,18 @@ export function HowItWorksPage() {
             </p>
           </Card>
         ))}
+      </div>
+
+      <h2 className="mb-1 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+        Where the data comes from
+      </h2>
+      <p className="mb-3 text-sm" style={{ color: "var(--text-secondary)" }}>
+        In a production version, each tool below connects through its own MCP
+        server, so the dashboard reads live data instead of the mock data this
+        proof of concept ships with.
+      </p>
+      <div className="mb-6">
+        <IntegrationFlowChart />
       </div>
 
       <Card>
@@ -84,10 +98,9 @@ export function HowItWorksPage() {
       </Card>
 
       <p className="mt-6 text-xs" style={{ color: "var(--text-muted)" }}>
-        This is a proof of concept — all data comes from{" "}
-        <code>src/data/mockData.ts</code>. In a production version, each
-        section would be wired to its source of truth (analytics warehouse,
-        project tracker, task tool) instead of mock data.
+        This is a proof of concept — all data currently comes from{" "}
+        <code>src/data/mockData.ts</code>, and the integrations above are not
+        yet wired up.
       </p>
     </div>
   );

@@ -1,64 +1,47 @@
 import type { Project, ProjectStatus } from "../data/mockData";
 import { projects } from "../data/mockData";
 
-const statusConfig: Record<ProjectStatus, { label: string; color: string; symbol: string }> = {
-  "on-track": { label: "On track", color: "var(--status-good)", symbol: "●" },
-  "at-risk": { label: "At risk", color: "var(--status-warning)", symbol: "▲" },
-  blocked: { label: "Blocked", color: "var(--status-critical)", symbol: "■" },
-  done: { label: "Done", color: "var(--text-muted)", symbol: "✓" },
-};
+const columns: { status: ProjectStatus; label: string; color: string }[] = [
+  { status: "on-track", label: "On track", color: "var(--status-good)" },
+  { status: "at-risk", label: "At risk", color: "var(--status-warning)" },
+  { status: "blocked", label: "Blocked", color: "var(--status-critical)" },
+  { status: "done", label: "Done", color: "var(--text-muted)" },
+];
 
-function StatusBadge({ status }: { status: ProjectStatus }) {
-  const cfg = statusConfig[status];
-  return (
-    <span
-      className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium"
-      style={{ borderColor: "var(--border-hairline)", color: "var(--text-primary)" }}
-    >
-      <span style={{ color: cfg.color }} aria-hidden="true">
-        {cfg.symbol}
-      </span>
-      {cfg.label}
-    </span>
-  );
-}
-
-function ProjectRow({ project, isFirst }: { project: Project; isFirst: boolean }) {
+function ProjectCard({ project }: { project: Project }) {
   return (
     <div
-      className="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-[1fr_auto] sm:items-center"
-      style={{ borderTop: isFirst ? "none" : "1px solid var(--gridline)" }}
+      className="rounded-md border p-3"
+      style={{ borderColor: "var(--border-hairline)", background: "var(--surface-1)" }}
     >
-      <div>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="font-medium" style={{ color: "var(--text-primary)" }}>
-            {project.name}
-          </span>
-          <StatusBadge status={project.status} />
-        </div>
-        <p className="mt-0.5 text-sm" style={{ color: "var(--text-secondary)" }}>
-          {project.summary}
-        </p>
-        <div className="mt-2 flex items-center gap-2">
+      <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+        {project.name}
+      </p>
+      <p className="mt-1 text-xs" style={{ color: "var(--text-secondary)" }}>
+        {project.summary}
+      </p>
+
+      <div className="mt-2.5 flex items-center gap-2">
+        <div
+          className="h-1.5 flex-1 overflow-hidden rounded-full"
+          style={{ background: "var(--gridline)" }}
+        >
           <div
-            className="h-1.5 w-40 overflow-hidden rounded-full"
-            style={{ background: "var(--gridline)" }}
-          >
-            <div
-              className="h-full rounded-full"
-              style={{ width: `${project.progress}%`, background: "var(--series-1)" }}
-            />
-          </div>
-          <span className="text-xs tabular-nums" style={{ color: "var(--text-muted)" }}>
-            {project.progress}%
-          </span>
+            className="h-full rounded-full"
+            style={{ width: `${project.progress}%`, background: "var(--series-1)" }}
+          />
         </div>
+        <span className="text-xs tabular-nums" style={{ color: "var(--text-muted)" }}>
+          {project.progress}%
+        </span>
       </div>
-      <div className="text-sm sm:text-right" style={{ color: "var(--text-secondary)" }}>
-        <div>{project.owner}</div>
-        <div className="text-xs" style={{ color: "var(--text-muted)" }}>
-          Target {project.targetDate}
-        </div>
+
+      <div
+        className="mt-2.5 flex items-center justify-between text-xs"
+        style={{ color: "var(--text-muted)" }}
+      >
+        <span>{project.owner}</span>
+        <span>Target {project.targetDate}</span>
       </div>
     </div>
   );
@@ -70,13 +53,40 @@ export function ProjectsSection() {
       <h2 className="mb-3 text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
         Active projects
       </h2>
-      <div
-        className="rounded-lg border"
-        style={{ borderColor: "var(--border-hairline)", background: "var(--surface-1)" }}
-      >
-        {projects.map((project, i) => (
-          <ProjectRow key={project.id} project={project} isFirst={i === 0} />
-        ))}
+      <div className="grid grid-cols-1 gap-4 overflow-x-auto sm:grid-cols-2 lg:grid-cols-4">
+        {columns.map((column) => {
+          const items = projects.filter((p) => p.status === column.status);
+          return (
+            <div
+              key={column.status}
+              className="rounded-lg border p-3"
+              style={{ borderColor: "var(--border-hairline)", background: "var(--surface-page)" }}
+            >
+              <div className="mb-3 flex items-center gap-2 px-1">
+                <span
+                  className="inline-block h-2.5 w-2.5 rounded-full"
+                  style={{ background: column.color }}
+                  aria-hidden="true"
+                />
+                <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                  {column.label}
+                </h3>
+                <span className="text-xs tabular-nums" style={{ color: "var(--text-muted)" }}>
+                  {items.length}
+                </span>
+              </div>
+              <div className="flex flex-col gap-2">
+                {items.length === 0 ? (
+                  <p className="px-1 text-xs" style={{ color: "var(--text-muted)" }}>
+                    Nothing here.
+                  </p>
+                ) : (
+                  items.map((project) => <ProjectCard key={project.id} project={project} />)
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
