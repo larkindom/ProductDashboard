@@ -1,5 +1,9 @@
 # Product Status Dashboard
 
+[![CI](https://github.com/larkindom/ProductDashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/larkindom/ProductDashboard/actions/workflows/ci.yml)
+
+**Live demo:** https://larkindom.github.io/ProductDashboard/
+
 A proof-of-concept dashboard for quickly updating stakeholders on product status:
 key product metrics, active projects, and open action items — all on one screen.
 
@@ -34,3 +38,7 @@ npm run build     # type-check and build for production
 inlined) — open it directly in a browser, no dev server or build step required.
 It's a point-in-time export for quick sharing; regenerate it after UI changes by
 running `npm run build` and re-inlining `dist/assets/*` into the file.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
