@@ -26,7 +26,7 @@ function App() {
       <Sidebar active={view} onNavigate={setView} />
 
       <div className="min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-[1400px]">
           <header className="mb-8 flex items-start justify-between gap-4">
             <div>
               <h1 className="text-2xl font-semibold" style={{ color: "var(--text-primary)" }}>
